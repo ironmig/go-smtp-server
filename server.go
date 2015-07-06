@@ -13,7 +13,7 @@ import (
 	"io"
 	"net/mail"
 	"net/textproto"
-	"bytes"
+	//"bytes"
 )
 var ErrNoCommand = errors.New("Command not found in messsage")
 type Message struct{
