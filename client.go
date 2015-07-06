@@ -57,7 +57,7 @@ func main() {
 	}
 	fmt.Println("Data ready")
 	
-	file,err := os.Open("test.txt")
+	file,err := os.Open("test.eml")
 	if err != nil {
 		fmt.Println(err)
 		return
