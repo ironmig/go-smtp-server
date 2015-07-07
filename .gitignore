@@ -1,5 +1,3 @@
-server
-client
 *.eml
 test_client
 test_server
