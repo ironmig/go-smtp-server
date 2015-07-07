@@ -6,13 +6,29 @@ import (
 	"fmt"
 	"crypto/tls"
 	"net"
+	"net/mail"
+	"os"
 )
 const password = "password"
 type InsecureAuth struct{}
 func (i InsecureAuth) Authenticate (u, p string) (server.AllowAddrFunc,error) {
 	return func (a string) (bool) {
+		fmt.Println(a,u)
 		return a == u && password == p
 	},nil
+}
+func DeliverToFileExample(m mail.Message) (error) {
+	file,err := os.OpenFile("testing.eml",os.O_RDWR,os.ModeType)
+	if err !=  nil {
+		fmt.Println(err)
+		return err
+	}
+	err = server.WriteMail(&m,file)
+	if err !=  nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
 }
 func main () {
 	cert, err := tls.LoadX509KeyPair("server.crt", "server.key")
@@ -28,8 +44,9 @@ func main () {
 		return
 	}
 	
-	s := server.NewServer("localhost:2500")
+	s := server.NewServer("localhost")
 	s.TLSconfig = &config
 	s.Auth = InsecureAuth{}
+	s.DeliverLocal = DeliverToFileExample
 	serverutil.Serve(s,listen)
 }

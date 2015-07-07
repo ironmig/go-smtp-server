@@ -38,7 +38,7 @@ func main() {
 	}
 	fmt.Println("TlS success")	
 	
-	auth := smtp.PlainAuth("","kma1660@gmail.com","password1","localhost:2500")
+	auth := smtp.PlainAuth("","kma1660@localhost","password","localhost:2500")
 	err = client.Auth(auth)
 	if err != nil {
 		fmt.Println(err)
@@ -46,7 +46,7 @@ func main() {
 	}
 	fmt.Println("Auth success")
 
-	err = client.Mail("kma1660@gmail.com")
+	err = client.Mail("kma1660@localhost")
 	if err != nil {
 		fmt.Println(err)
 		return
