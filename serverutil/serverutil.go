@@ -13,7 +13,7 @@ func Serve(s *server.Server,listen net.Listener) (error) {
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig,os.Interrupt,os.Kill,syscall.SIGTERM,syscall.SIGHUP)
 
-	for {
+	go func() {for {
 		conn,err := listen.Accept()
 		if err != nil {
 			fmt.Println(err)
@@ -23,7 +23,7 @@ func Serve(s *server.Server,listen net.Listener) (error) {
 		
 		client := client.NewClient(conn,s)
 		go client.Handle()
-	}
+	}}()
 
 	_ = <- sig
 	return nil

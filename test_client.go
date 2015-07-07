@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"net/smtp"
-	"net"
+	//"net"
 	"os"
 	"io"
+	"crypto/tls"
+	"net"
 )
 func main() {
-	
+	config := tls.Config{InsecureSkipVerify:true}
 	conn,err := net.Dial("tcp","localhost:2500")
 	if err != nil {
 		fmt.Println(err)
@@ -29,7 +31,22 @@ func main() {
 	}
 	fmt.Println("Heloed")
 	
-	err = client.Mail("test@localhost")
+	err = client.StartTLS(&config)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("TlS success")	
+	
+	auth := smtp.PlainAuth("","kma1660@gmail.com","password1","localhost:2500")
+	err = client.Auth(auth)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Auth success")
+
+	err = client.Mail("kma1660@gmail.com")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -84,7 +101,6 @@ func main() {
 	}
 	fmt.Println("Reset succ")
 	
-	
 	err = client.Quit()
 	if err != nil {
 		fmt.Println(err)
@@ -92,44 +108,4 @@ func main() {
 	}
 	fmt.Println("Quit succ")	
 	
-	/*
-	if len(os.Args) > 1 {
-		file,err := os.Open(os.Args[1])
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		
-		conn,err := net.Dial("tcp4","localhost:2500")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		
-		SendMail(conn,file)
-	} else {
-		fmt.Println("No file")
-	}
-	*/
 }
-/*
-func SendMail(conn net.Conn,message io.Reader) {
-	fmt.Println("Received Conn",conn.RemoteAddr())
-	client,err :=  smtp.NewClient(conn,"localhost:2500")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println("conn est")
-	err = client.Hello("test")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	err = client.Rcpt("bob")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-}
-*/
