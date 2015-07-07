@@ -3,3 +3,7 @@ client
 *.eml
 test_client
 test_server
+*.kate-swp
+.fuse_hidden*
+*.crt
+*.key
